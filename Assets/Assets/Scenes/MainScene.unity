@@ -1,0 +1,10 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!104 &1
+Scene:
+  m_Name: MainScene
+  m_EditorSettings:
+    serializedVersion: 2
+  m_SceneSettings:
+    m_SceneGUID: 00000000000000000000000000000000
+  m_GameObjects: []
