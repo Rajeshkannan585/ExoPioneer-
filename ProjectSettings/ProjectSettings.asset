@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  companyName: "MyCompany"
+  productName: "ExoPioneer"
+  defaultScreenWidth: 1920
+  defaultScreenHeight: 1080
+  fullscreenMode: 1
+  runInBackground: 1
+  defaultIsNativeResolution: 1
+  resizableWindow: 1
+  captureSingleScreen: 0
+  usePlayerLog: 1
+  defaultCursorLocked: 0
+  defaultCursorVisible: 1
+  forceSingleInstance: 0
