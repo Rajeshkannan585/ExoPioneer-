@@ -1,47 +1,52 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public float health = 100f;
-    public float oxygen = 100f;
-    public float shield = 50f;
+    public static GameManager instance; // Singleton pattern
 
-    public Text healthText;
-    public Text oxygenText;
-    public Text shieldText;
+    public int playerHealth = 100;
+    public int maxHealth = 100;
 
-    void Update()
+    void Awake()
     {
-        // Oxygen drain over time
-        oxygen -= Time.deltaTime * 2f;
-        if (oxygen < 0) oxygen = 0;
-
-        // If no oxygen, health decreases
-        if (oxygen <= 0)
+        if (instance == null)
         {
-            health -= Time.deltaTime * 5f;
-            if (health < 0) health = 0;
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scenes
         }
-
-        // Update UI
-        healthText.text = "Health: " + Mathf.Round(health);
-        oxygenText.text = "Oxygen: " + Mathf.Round(oxygen);
-        shieldText.text = "Shield: " + Mathf.Round(shield);
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void AddOxygen(float amount)
+    // 🛑 Player takes damage
+    public void TakeDamage(int amount)
     {
-        oxygen = Mathf.Clamp(oxygen + amount, 0, 100);
+        playerHealth -= amount;
+        if (playerHealth < 0) playerHealth = 0;
+
+        Debug.Log("Player took damage: " + amount + " | Health now: " + playerHealth);
+
+        if (playerHealth <= 0)
+        {
+            PlayerDied();
+        }
     }
 
-    public void Heal(float amount)
+    // ❤️ Player heals
+    public void HealPlayer(int amount)
     {
-        health = Mathf.Clamp(health + amount, 0, 100);
+        playerHealth += amount;
+        if (playerHealth > maxHealth) playerHealth = maxHealth;
+
+        Debug.Log("Player healed: " + amount + " | Health now: " + playerHealth);
     }
 
-    public void AddShield(float amount)
+    // ☠️ If health reaches 0
+    private void PlayerDied()
     {
-        shield = Mathf.Clamp(shield + amount, 0, 100);
+        Debug.Log("Player died! Game Over.");
+        // இங்கே respawn logic அல்லது game over screen வைக்கலாம்
     }
 }
