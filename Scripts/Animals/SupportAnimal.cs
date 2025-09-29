@@ -1,69 +1,51 @@
-// ===============================
+// ==============================
 // SupportAnimal.cs
-// Basic pet AI that follows player and provides support (heal or attack)
-// ===============================
+// Base script for animals that can follow & protect the player
+// ==============================
 
 using UnityEngine;
+using UnityEngine.AI;
 
-public class SupportAnimal : MonoBehaviour
+namespace ExoPioneer.Animals
 {
-    [Header("Follow Settings")]
-    public Transform player;          // assign player in Inspector
-    public float followDistance = 3f; // how far behind player to follow
-    public float moveSpeed = 3f;
-
-    [Header("Support Abilities")]
-    public bool canHeal = true;
-    public bool canAttackAssist = false;
-    public float healAmount = 5f;
-    public float healCooldown = 5f;
-    private float healTimer;
-
-    private void Start()
+    [RequireComponent(typeof(NavMeshAgent))]
+    public class SupportAnimal : MonoBehaviour
     {
-        if (player == null)
+        public string animalName = "Guardian Beast"; // Display name
+        public float health = 100f;
+        public float damage = 10f;
+        public float followDistance = 3f;
+
+        private Transform player;
+        private NavMeshAgent agent;
+
+        void Start()
         {
-            GameObject p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null) player = p.transform;
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            agent = GetComponent<NavMeshAgent>();
         }
-    }
 
-    private void Update()
-    {
-        if (player == null) return;
-
-        // --- Follow Player ---
-        Vector3 targetPos = player.position - player.forward * followDistance;
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetPos,
-            moveSpeed * Time.deltaTime
-        );
-
-        // Face player
-        transform.LookAt(player);
-
-        // --- Heal Support ---
-        if (canHeal)
+        void Update()
         {
-            healTimer += Time.deltaTime;
-            if (healTimer >= healCooldown)
+            if (player == null) return;
+
+            float distance = Vector3.Distance(transform.position, player.position);
+
+            // Follow the player if too far
+            if (distance > followDistance)
             {
-                HealPlayer();
-                healTimer = 0f;
+                agent.SetDestination(player.position);
+            }
+            else
+            {
+                agent.ResetPath();
             }
         }
 
-        // --- Attack Assist (future use) ---
-        if (canAttackAssist)
+        public void Attack(GameObject target)
         {
-            // TODO: Implement attack support (shoot, bite, etc.)
+            // Simple attack function
+            Debug.Log(animalName + " attacks " + target.name + " for " + damage + " damage!");
         }
-    }
-
-    void HealPlayer()
-    {
-        Debug.Log($"{name} healed player for {healAmount} HP!");
-        // TODO: Call PlayerHealth.AddHealth(healAmount);
     }
 }
