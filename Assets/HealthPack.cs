@@ -2,20 +2,19 @@ using UnityEngine;
 
 public class HealthPack : MonoBehaviour
 {
-    public float healAmount = 20f;
+    public int healAmount = 20; // எவ்வளவு heal பண்ணணும்
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            GameManager gm = FindObjectOfType<GameManager>();
-            if (gm != null)
+            if (GameManager.instance != null)
             {
-                gm.HealPlayer(healAmount);
+                GameManager.instance.HealPlayer(healAmount);
             }
 
-            Debug.Log("Health Pack Collected! +" + healAmount);
-            Destroy(gameObject); // once collected, remove health pack
+            Debug.Log("Player picked up health pack!");
+            Destroy(gameObject); // Use ஆன பிறகு pack disappear ஆகும்
         }
     }
 }
