@@ -1,16 +1,12 @@
 name: Unity Android Build
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
   build:
     name: Build Android APK
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,13 +20,17 @@ jobs:
             Library-
 
       - name: Setup Unity
-        uses: game-ci/unity-actions/setup@v2
+        uses: game-ci/unity-setup@v4
         with:
           unityVersion: 2022.3.0f1
           targetPlatform: Android
+          activationMode: serial
+          email: ${{ secrets.UNITY_EMAIL }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          serial: ${{ secrets.UNITY_SERIAL }}
 
       - name: Build project
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@v4
         with:
           targetPlatform: Android
 
