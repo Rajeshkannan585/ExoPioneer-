@@ -1,4 +1,4 @@
-name: Unity Android Build (Auto License)
+name: Unity Android Build
 
 on:
   workflow_dispatch:
@@ -7,34 +7,39 @@ jobs:
   build:
     name: Build Android APK
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout repo
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Cache Unity Library (optional)
       - name: Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ runner.os }}
+          key: Library-${{ runner.os }}-${{ hashFiles('**/Packages/manifest.json') }}
           restore-keys: |
-            Library-
+            Library-${{ runner.os }}-
 
-      - name: Unity - Activate License
-        uses: game-ci/unity-activate@v2
-        with:
-          unityEmail: ${{ secrets.UNITY_EMAIL }}
-          unityPassword: ${{ secrets.UNITY_PASSWORD }}
-          unitySerial: ${{ secrets.UNITY_SERIAL }}
-          unityVersion: 2022.3.17f1
-
-      - name: Unity - Build
+      # Build the project
+      - name: Build project
         uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: Android
-          unityVersion: 2022.3.17f1
+          unityVersion: 2022.3.10f1
+          projectPath: ./
+          buildName: ExoPioneer
+          buildFile: ExoPioneer.apk
+          versioning: Semantic
 
+      # Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AndroidBuild
-          path: build/Android
+          name: ExoPioneer-Android-APK
+          path: build/Android/ExoPioneer.apk
