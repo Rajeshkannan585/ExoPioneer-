@@ -7,8 +7,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Build with Unity
         uses: game-ci/unity-builder@v3
         with:
@@ -16,7 +18,9 @@ jobs:
           targetPlatform: Android
           buildName: ExoPioneer
           buildPath: build/android
-      - uses: actions/upload-artifact@v3
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4   # ✅ updated version
         with:
-          name: ExoPioneer-APK
+          name: ExoPioneer-Android
           path: build/android
