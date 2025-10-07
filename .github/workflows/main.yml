@@ -9,30 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 2: Activate Unity License (Personal)
+      # Step 1: Activate Unity License
       - name: Activate Unity License
         uses: game-ci/unity-activate@v2
         with:
-          unityVersion: 2022.3.10f1
+          unityVersion: 2022.3.62f2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-      # Step 3: Build Project
-      - name: Build project
+      # Step 2: Build using correct verified Docker image
+      - name: Build Project
         uses: game-ci/unity-builder@v4
         with:
+          unityVersion: 2022.3.62f2
           targetPlatform: Android
-          unityVersion: 2022.3.10f1
           projectPath: .
           buildName: ExoPioneer
           buildPath: build/Android
+          customImage: unityci/editor@sha256:f40b0e4a6f1648e8f6991930b4a78fc5aff3282f38f9dd1f7e6414238d68b56b
 
-      # Step 4: Upload the built APK
+      # Step 3: Upload APK Artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
