@@ -1,4 +1,4 @@
-name: Build Android APK (Skip License)
+name: Unity Android Build
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
+      # Checkout repo
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -22,21 +22,24 @@ jobs:
           restore-keys: |
             Library-${{ runner.os }}-
 
-      # Build Unity project for Android (skip license activation)
-      - name: Build Android APK
+      # Build the project
+      - name: Build project
         uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ./
           targetPlatform: Android
-          unityVersion: 2022.3.17f1
+          unityVersion: 2022.3.10f1
+          projectPath: ./
           buildName: ExoPioneer
-          buildsPath: build
+          buildFile: ExoPioneer.apk
           versioning: Semantic
-          skipActivation: true' 
-          allowDirtyBuild: true' 
-      # Upload APK output
+
+      # Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ExoPioneer-Android
+          name: ExoPioneer-Android-APK
           path: build/Android/ExoPioneer.apk
