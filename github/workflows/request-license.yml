@@ -1,7 +1,7 @@
 name: Request Unity Activation File
 
 on:
-  workflow_dispatch:  # Manual trigger from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   activation:
