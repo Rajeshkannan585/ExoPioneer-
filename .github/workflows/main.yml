@@ -1,40 +1,22 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
-    name: Build Android APK
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # Step 1: Activate Unity License
-      - name: Activate Unity License
-        uses: game-ci/unity-activate@v2
+      - uses: actions/checkout@v3
+      - name: Build with Unity
+        uses: game-ci/unity-builder@v3
         with:
-          unityVersion: 2022.3.62f2
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-
-      # Step 2: Build Project with correct Linux Docker image
-      - name: Build Project
-        uses: game-ci/unity-builder@v4
-        with:
-          unityVersion: 2022.3.62f2
+          unityVersion: 2022.3.25f1
           targetPlatform: Android
-          customImage: unityci/editor:ubuntu-2022.3.62f2-android-3.1.0
-          projectPath: .
           buildName: ExoPioneer
-          buildPath: build/Android
-
-      # Step 3: Upload APK
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+          buildPath: build/android
+      - uses: actions/upload-artifact@v3
         with:
-          name: ExoPioneer-Android-APK
-          path: build/Android/*.apk
+          name: ExoPioneer-APK
+          path: build/android
