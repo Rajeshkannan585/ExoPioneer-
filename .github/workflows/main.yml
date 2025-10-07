@@ -3,6 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:  # allows manual run too
 
 jobs:
   build:
@@ -12,26 +13,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ✅ Step 1: Activate Unity License (Free / Personal)
-      - name: Activate Unity
-        uses: game-ci/unity-activate@v2
-        with:
-          unityVersion: 2022.3.25f1
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-
-      # ✅ Step 2: Build Android APK
-      - name: Build Android
-        uses: game-ci/unity-builder@v3
+      - name: Build Android with Unity
+        uses: game-ci/unity-builder@v4
         with:
           unityVersion: 2022.3.25f1
           targetPlatform: Android
-          buildName: ExoPioneer
-          outputPath: build/android
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
 
-      # ✅ Step 3: Upload the generated APK
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: ExoPioneer-Android
-          path: build/android
+          path: build
