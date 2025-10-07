@@ -21,18 +21,18 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-      # Step 2: Build using correct verified Docker image
+      # Step 2: Build Project with correct Linux Docker image
       - name: Build Project
         uses: game-ci/unity-builder@v4
         with:
           unityVersion: 2022.3.62f2
           targetPlatform: Android
+          customImage: unityci/editor:ubuntu-2022.3.62f2-android-3.1.0
           projectPath: .
           buildName: ExoPioneer
           buildPath: build/Android
-          customImage: unityci/editor@sha256:f40b0e4a6f1648e8f6991930b4a78fc5aff3282f38f9dd1f7e6414238d68b56b
 
-      # Step 3: Upload APK Artifact
+      # Step 3: Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
