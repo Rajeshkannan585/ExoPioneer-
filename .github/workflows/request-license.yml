@@ -1,4 +1,4 @@
-name: Request Unity License (.alf)
+name: Unity License Request (Mobile)
 
 on:
   workflow_dispatch:
@@ -7,20 +7,17 @@ jobs:
   requestLicense:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Request Unity activation file
-        uses: game-ci/unity-license-activate@v2
+      - name: Request Unity Activation File (.alf)
+        uses: game-ci/unity-builder@v4
         with:
           unityVersion: 2022.3.25f1
-          email: ${{ secrets.UNITY_EMAIL }}
-          password: ${{ secrets.UNITY_PASSWORD }}
-          serial: ${{ secrets.UNITY_SERIAL }}
+          targetPlatform: Android
 
-      - name: Upload .alf file
-        if: always()
+      - name: Upload activation file
         uses: actions/upload-artifact@v4
         with:
-          name: Unity-License-Request
+          name: Unity-Activation-Request
           path: unity-activation-file.alf
