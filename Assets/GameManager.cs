@@ -2,17 +2,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance; // Singleton pattern
+    // Singleton instance
+    public static GameManager instance;
 
+    // Player health variables
     public int playerHealth = 100;
     public int maxHealth = 100;
 
     void Awake()
     {
+        // Ensure only one instance exists across scenes
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -20,13 +23,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 🛑 Player takes damage
+    // Player takes damage
     public void TakeDamage(int amount)
     {
         playerHealth -= amount;
         if (playerHealth < 0) playerHealth = 0;
 
-        Debug.Log("Player took damage: " + amount + " | Health now: " + playerHealth);
+        Debug.Log("Player took damage: " + amount);
 
         if (playerHealth <= 0)
         {
@@ -34,19 +37,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ❤️ Player heals
+    // Player heals
     public void HealPlayer(int amount)
     {
         playerHealth += amount;
-        if (playerHealth > maxHealth) playerHealth = maxHealth;
+        if (playerHealth > maxHealth)
+            playerHealth = maxHealth;
 
-        Debug.Log("Player healed: " + amount + " | Health now: " + playerHealth);
+        Debug.Log("Player healed: " + amount + " | Current health: " + playerHealth);
     }
 
-    // ☠️ If health reaches 0
+    // Called when health reaches 0
     private void PlayerDied()
     {
         Debug.Log("Player died! Game Over.");
-        // இங்கே respawn logic அல்லது game over screen வைக்கலாம்
+        // Add respawn or game over logic here
     }
 }
