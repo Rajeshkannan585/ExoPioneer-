@@ -96,4 +96,16 @@ public class WorldMapManager : MonoBehaviour
         miniMapPanel.alpha = 0;
         miniMapPanel.blocksRaycasts = false;
     }
+}public Transform[] baseZones;
+
+void UpdateMiniMap()
+{
+    // existing map icons update…
+
+    foreach (var zone in baseZones)
+    {
+        if (zone == null) continue;
+        Vector2 zonePos = new Vector2(zone.position.x, zone.position.z);
+        // Convert world position to map space and draw
+    }
 }
