@@ -1,4 +1,24 @@
-- name: Build Android
+name: Build Android
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Project (Android)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repo with LFS enabled
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      # Step 2: Setup Unity Builder
+      - name: Build Android
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -7,3 +27,10 @@
           targetPlatform: Android
           buildName: ExoPioneer
           buildPath: build/ExoPioneer.apk
+
+      # Step 3: Upload artifact (APK output)
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ExoPioneer-Android-APK
+          path: build/ExoPioneer.apk
