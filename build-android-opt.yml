@@ -1,18 +1,29 @@
-name: Build Optimized Android
+name: ExoPioneer Android Optimized Build
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Unity Android Build (Optimized)
+    name: Build Android (Optimized)
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Setup Unity
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Cache Unity Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ runner.os }}-${{ hashFiles('**/ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: |
+            Library-${{ runner.os }}-
+
+      - name: Set up Unity
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -21,9 +32,16 @@ jobs:
           targetPlatform: Android
           buildName: ExoPioneer
           buildPath: build/ExoPioneer.aab
-          compressionMethod: LZ4HC
-          splitBinary: true
-          androidAppBundle: true
-          strippingLevel: high
-          developmentBuild: false
-          scriptDebugging: false
+          compressionMethod: LZ4
+          androidExportType: aab
+          androidKeystoreName: userDebug
+          androidKeystorePass: debugpass
+          androidKeyaliasName: debug
+          androidKeyaliasPass: debugpass
+          androidTargetSdkVersion: 33
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ExoPioneer-Android-AAB
+          path: build/ExoPioneer.aab
