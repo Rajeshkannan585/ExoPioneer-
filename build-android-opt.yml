@@ -1,0 +1,29 @@
+name: Build Optimized Android
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Unity Android Build (Optimized)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Unity
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: 2022.3.25f1
+          targetPlatform: Android
+          buildName: ExoPioneer
+          buildPath: build/ExoPioneer.aab
+          compressionMethod: LZ4HC
+          splitBinary: true
+          androidAppBundle: true
+          strippingLevel: high
+          developmentBuild: false
+          scriptDebugging: false
